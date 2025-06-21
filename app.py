@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # ======================
 # 📦 Load the trained model
 # ======================
-with open('expense_predictor.pkl', 'rb') as f:
+with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 # ======================
