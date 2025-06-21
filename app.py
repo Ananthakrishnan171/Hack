@@ -1,34 +1,29 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
 import pickle
 
-# =========================
-# 🔁 Load the trained model
-# =========================
-with open('model.pkl', 'rb') as file:
-    model = pickle.load(file)
+# Load trained model
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
-# =========================
-# 🎨 Streamlit App Layout
-# =========================
+# Streamlit App Layout
 st.set_page_config(page_title="Lifestyle Expense Predictor", layout="centered")
-st.title("💰 Monthly Expense Predictor")
-st.write("Estimate your monthly expenses based on your lifestyle habits.")
+st.title("💸 Monthly Lifestyle Expense Estimator")
 
-# =========================
-# 📝 User Inputs
-# =========================
+st.markdown("Estimate your monthly expenses based on your lifestyle habits.")
+
+# Input fields
 outings = st.slider("Number of outings per month", 0, 30, 5)
-shopping = st.slider("Monthly shopping frequency", 0, 30, 4)
-recharge = st.number_input("Mobile/data recharge cost (₹)", 0, 5000, 300)
-food = st.slider("Food ordering frequency per month", 0, 50, 6)
-rent = st.number_input("Rent or hostel fee (₹)", 0, 30000, 5000)
+shopping_freq = st.selectbox("Shopping frequency", ['Rarely', 'Sometimes', 'Often', 'Very Often'])
+recharge_cost = st.selectbox("Monthly data recharge cost", ['<100', '100-300', '300-500', '>500'])
+food_orders = st.slider("Food ordering frequency per month", 0, 30, 5)
+rent = st.number_input("Rent or Hostel fee (₹)", min_value=0, value=5000)
 
-# =========================
-# 📌 Predict Button
-# =========================
-if st.button("Predict Monthly Expense"):
-    input_data = np.array([[outings, shopping, recharge, food, rent]])
+# Label Encoding Manual Map (should match training encoding)
+shop_map = {'Rarely': 0, 'Sometimes': 1, 'Often': 2, 'Very Often': 3}
+recharge_map = {'<100': 0, '100-300': 1, '300-500': 2, '>500': 3}
+
+if st.button("Predict Expense"):
+    input_data = np.array([[outings, shop_map[shopping_freq], recharge_map[recharge_cost], food_orders, rent]])
     prediction = model.predict(input_data)[0]
     st.success(f"Estimated Monthly Expense: ₹{prediction:.2f}")
