@@ -6,7 +6,7 @@ import pickle
 # =========================
 # 🔁 Load the trained model
 # =========================
-with open('expense_predictor.pkl', 'rb') as file:
+with open('model.pkl', 'rb') as file:
     model = pickle.load(file)
 
 # =========================
